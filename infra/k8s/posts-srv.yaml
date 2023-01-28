@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-srv
+spec:
+  type: NodePort
+  # selector: what pods to expose to outside world.
+  # find all pods with label of app: posts (see posts-depl.yaml)
+  selector:
+    app: posts
+    # ports to expose - check in app.listen of index.js of posts
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      # targetPort - actual port in pod. Other port above is the Node port, the node being a virtual machine that holds all k8 objects -- the node port service redirects traffic to targetPort in pod. You can technically do a different port and redirect to a different targetPort, but unnecessary
+      targetPort: 4000
+# see Creating NodePort Service for refresher

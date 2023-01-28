@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-depl
+#how behave - spec
+spec:
+  # num of pods running some image - 1 pod here
+  replicas: 1
+  # selector and metadata directs the deployment to which pods it should manage in cluster. template - metadata = type of pod to make
+  selector:
+    matchLabels:
+      app: comments
+      #template describes how all different pods should be created by deployment
+  template:
+    metadata:
+      #appies identifer to pod to be created
+      labels:
+        app: comments
+    spec:
+      containers:
+        - name: comments
+          image: jclk86/comments:latest
+# cluster ip service -- can do in separate k8s file if you want, but 1:1 with deployment they allow access to
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-srv
+  # select what pod to allow access to
+spec:
+  selector:
+    app: comments
+  type: ClusterIP #optional -- or will default
+  ports: #check index.js of comments service
+    - name: comments
+      protocol: TCP
+      port: 4001
+      targetPort: 4001

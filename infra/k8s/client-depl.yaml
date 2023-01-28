@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+#how behave - spec
+spec:
+  # num of pods running some image - 1 pod here
+  replicas: 1
+  # selector and metadata directs the deployment to which pods it should manage in cluster. template - metadata = type of pod to make
+  selector:
+    matchLabels:
+      app: client
+      #template describes how all different pods should be created by deployment
+  template:
+    metadata:
+      #appies identifer to pod to be created
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: jclk86/client:latest
+# cluster ip service -- can do in separate k8s file if you want, but 1:1 with deployment they allow access to
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+  # select what pod to allow access to
+spec:
+  selector:
+    app: client
+  type: ClusterIP #optional -- or will default
+  ports: #check index.js of client service
+    - name: client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+      #create react app os hosted on port 3000

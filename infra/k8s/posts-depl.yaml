@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+#how behave - spec
+spec:
+  # num of pods running some image - 1 pod here
+  replicas: 1
+  # selector and metadata directs the deployment to which pods it should manage in cluster. template - metadata = type of pod to make
+  selector:
+    matchLabels:
+      app: posts
+      #template describes how all different pods should be created by deployment
+  template:
+    metadata:
+      #appies identifer to pod to be created
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: jclk86/posts:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  #cause we already have something called posts-srv
+  name: posts-clusterip-srv
+  # select what pod to allow access to
+spec:
+  selector:
+    app: posts
+  type: ClusterIP #optional -- or will default
+  ports: #check index.js of event-bus service
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

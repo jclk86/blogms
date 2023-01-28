@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-depl
+#how behave - spec
+spec:
+  # num of pods running some image - 1 pod here
+  replicas: 1
+  # selector and metadata directs the deployment to which pods it should manage in cluster. template - metadata = type of pod to make
+  selector:
+    matchLabels:
+      app: event-bus
+      #template describes how all different pods should be created by deployment
+  template:
+    metadata:
+      #appies identifer to pod to be created
+      labels:
+        app: event-bus
+    spec:
+      containers:
+        - name: event-bus
+          image: jclk86/event-bus:latest
+# cluster ip service -- can do in separate k8s file if you want, but 1:1 with deployment they allow access to
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-srv
+  # select what pod to allow access to
+spec:
+  selector:
+    app: event-bus
+  type: ClusterIP #optional -- or will default
+  ports: #check index.js of event-bus service
+    - name: event-bus
+      protocol: TCP
+      port: 4005
+      targetPort: 4005

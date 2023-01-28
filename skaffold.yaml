@@ -1,0 +1,62 @@
+# Not applied to k8
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  # tells skaffold there is a collection of diff config files intended for k8 inside infra/k8s directory -- watch all these .yaml files. Any changes, skaffold will reapply config file to k8 cluster. Again, this is for dev. runs the apply -f and deletes previous
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+      # we don't want to kee pushing each build
+build:
+  local:
+    push: false
+  # tells skffold about something inide of project to maintain -- a pod that is running code outside of client directory. Whenever there is a change in this directory, skaffold will try to take those changes and update the pod -- 1. make change to js file, skaffold will take that file and directly throw it into pod. Rebuilds image using client directory and throws it in as update to our cluster 2.
+  artifacts:
+    - image: jclk86/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.js"
+            dest: .
+    - image: jclk86/comments
+      context: comments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: jclk86/event-bus
+      context: event-bus
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: jclk86/moderation
+      context: moderation
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: jclk86/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: jclk86/query
+      context: query
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .

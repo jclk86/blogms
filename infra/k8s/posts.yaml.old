@@ -1,0 +1,21 @@
+# CONFIG
+
+#K8s is extensible - we can add in our own custom objects. This specifies te set of objects we want K8s to look at
+apiVersion: v1
+# Th type of object we want to create
+kind: Pod
+#Config options for the object we are about to create
+metadata:
+  # When the pod is created, give it a name of 'posts'
+  name: posts
+#The exact attribute we want to apply to the object we are about to create
+spec:
+  # we can create many containers in a single pod
+  containers:
+    # Make a container with a name of 'posts' ( "-" means array entry). If more containers, think about name more specificallycontainers
+    - name: posts
+      # The exact image we want to use
+      # we want version number here and not latest (default), Kuber look into docker hub and look for this latest version (remember it will look in local first, so make distinction)
+      image: johnchan/posts:0.0.1
+
+      ***This is really the deployment, don't really create pods like this
