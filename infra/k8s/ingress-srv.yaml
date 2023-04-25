@@ -5,9 +5,9 @@ metadata:
   annotations: # help ingress controller understand that we are feeding it routing rules - scan s for nginx for routing rules
     kubernetes.io/ingress.class: nginx
     # for wildcard/ reg expression for paths
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
-  rules: #teach ingress ontroller how to take incoming traffic and route them to pods - look at depls for below - posts.com can be anyting you want... just make sure you got to that hosts file (see your notes for hosts file config fix in windows/system32/driver/etc/hosts and map 127.0.01 to whatever yoy changed posts.com to - only for dev environment not for production. the real posts.com is in k8 cluster)
+  rules: #teach ingress ontroller how to take incoming traffic and route them to pods - look at depls for below - posts.com can be anyting you want... just make sure you got to that hosts file (see your notes for hosts file config fix in windows/system32/driver/etc/hosts and map 127.0.01 to whatever yoy changed posts.com to - only for dev environment not for production. the real posts.com is in k8 cluster). tricks ingress-nginx to routing posts.com to localhost
     - host: posts.com
       http:
         paths:
@@ -41,3 +41,7 @@ spec:
                 name: client-srv
                 port:
                   number: 3000
+# Package from the k8 above to use
+
+#  Lambda Functions - no name and only returns values
+
